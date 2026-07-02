@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Catatan - MyNotes</title>
+    <link rel="stylesheet" href="/Aplikasi Notes/css/style.css">
+    <!-- Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fa-solid fa-note-sticky"></i>
+                <h1>MyNotes</h1>
+            </div>
+            <p class="header-subtitle">Catatanmu tersimpan aman di browser</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main container">
+        <!-- Bagian Form Catatan -->
+        <section class="note-form-section">
+            <div class="form-card">
+                <div class="form-header">
+                    <h2 id="form-title">
+                        <i class="fa-solid fa-plus-circle"></i> Buat Catatan Baru
+                    </h2>
+                    <button class="btn-collapse" id="btnCollapse" title="Sembunyikan/Munculkan form">
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </button>
+                </div>
+                <div class="form-body" id="formBody">
+                    <div class="input-group">
+                        <label for="noteTitle">
+                            <i class="fa-solid fa-heading"></i> Judul Catatan
+                        </label>
+                        <input
+                            type="text"
+                            id="noteTitle"
+                            placeholder="Masukkan judul catatan..."
+                            maxlength="100"
+                            autocomplete="off"
+                        />
+                        <span class="char-count" id="titleCharCount">0/100</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="noteContent">
+                            <i class="fa-solid fa-align-left"></i> Isi Catatan
+                        </label>
+                        <textarea
+                            id="noteContent"
+                            placeholder="Tulis isi catatanmu di sini..."
+                            rows="5"
+                            maxlength="5000"
+                        ></textarea>
+                        <span class="char-count" id="contentCharCount">0/5000</span>
+                    </div>
+                    <div class="input-group color-picker-group">
+                        <label>
+                            <i class="fa-solid fa-palette"></i> Warna Catatan
+                        </label>
+                        <div class="color-options">
+                            <button class="color-btn active" data-color="#ffffff" style="background: #ffffff;" title="Putih"></button>
+                            <button class="color-btn" data-color="#fff9c4" style="background: #fff9c4;" title="Kuning"></button>
+                            <button class="color-btn" data-color="#c8e6c9" style="background: #c8e6c9;" title="Hijau"></button>
+                            <button class="color-btn" data-color="#bbdefb" style="background: #bbdefb;" title="Biru"></button>
+                            <button class="color-btn" data-color="#f8bbd0" style="background: #f8bbd0;" title="Pink"></button>
+                            <button class="color-btn" data-color="#ffe0b2" style="background: #ffe0b2;" title="Oranye"></button>
+                            <button class="color-btn" data-color="#d1c4e9" style="background: #d1c4e9;" title="Ungu"></button>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-primary" id="btnSave">
+                            <i class="fa-solid fa-floppy-disk"></i> Simpan Catatan
+                        </button>
+                        <button class="btn btn-outline hidden" id="btnCancel">
+                            <i class="fa-solid fa-xmark"></i> Batal Edit
+                        </button>
+                    </div>
+                    <div class="form-message hidden" id="formMessage"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Toolbar & Pencarian -->
+        <section class="toolbar-section">
+            <div class="toolbar">
+                <div class="search-box">
+                    <i class="fa-solid fa-search"></i>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Cari catatan..."
+                        autocomplete="off"
+                    />
+                    <button class="btn-clear-search hidden" id="btnClearSearch" title="Hapus pencarian">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="toolbar-info">
+                    <span class="note-count" id="noteCount">0 catatan</span>
+                    <button class="btn btn-danger-outline btn-sm hidden" id="btnDeleteAll" title="Hapus semua catatan">
+                        <i class="fa-solid fa-trash-can"></i> Hapus Semua
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Daftar Catatan -->
+        <section class="notes-section">
+            <div class="notes-grid" id="notesGrid">
+                <!-- Catatan akan dirender di sini oleh JavaScript -->
+            </div>
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState">
+                <div class="empty-state-icon">
+                    <i class="fa-solid fa-note-sticky"></i>
+                </div>
+                <h3>Belum ada catatan</h3>
+                <p>Buat catatan pertamamu dengan mengisi form di atas!</p>
+            </div>
+            <!-- No search result state -->
+            <div class="empty-state hidden" id="noResultState">
+                <div class="empty-state-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <h3>Tidak ditemukan</h3>
+                <p>Tidak ada catatan yang cocok dengan pencarianmu.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div class="modal-overlay hidden" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <h3>Konfirmasi Hapus</h3>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">Apakah kamu yakin ingin menghapus catatan ini?</p>
+                <p class="modal-warning">Tindakan ini tidak dapat dibatalkan.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="btnModalCancel">Batal</button>
+                <button class="btn btn-danger" id="btnModalConfirm">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="/Aplikasi Notes/js/script.js"></script>
+</body>
+</html>
